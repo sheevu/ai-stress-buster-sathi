@@ -456,6 +456,7 @@ function makeAssistantReply({ profile, message, mode, moodScore, emotion, histor
   const speak = (variants) => variants[language] || variants.hinglish;
   const scripturePath = SCRIPTURE_SOLUTIONS[category] || SCRIPTURE_SOLUTIONS.general;
   const caseText = buildInteractiveCaseText(category, profile.name, language);
+  const choice = message.trim();
 
   if (crisis) {
     return {
@@ -481,6 +482,37 @@ function makeAssistantReply({ profile, message, mode, moodScore, emotion, histor
           hindi: "यदि संभव हो तो उत्तर दें: 'I am safe right now'। मैं आपके साथ हूँ।",
           english: "If possible, reply with: 'I am safe right now'. I can stay with you while you take that step.",
         }),
+    };
+  }
+
+  if (choice === "1" || choice === "2" || choice === "3") {
+    const optionReply = {
+      "1": speak({
+        hinglish: `${profile.name}, calm reset activated: 5 slow breaths lo, shoulders relax karo, aur 30 sec ke liye sirf exhale pe focus karo. Fir 1 line likho: "Abhi main kis cheez ko control kar sakta/sakti hoon?"`,
+        hindi: `${profile.name}, शांत रीसेट सक्रिय: 5 धीमी श्वास लें, कंधे ढीले करें, और 30 सेकंड केवल श्वास छोड़ने पर ध्यान दें। फिर 1 पंक्ति लिखें: "अभी मैं किस चीज़ को नियंत्रित कर सकता/सकती हूँ?"`,
+        english: `${profile.name}, calm reset activated: take 5 slow breaths, relax your shoulders, and focus on exhale for 30 seconds. Then write one line: "What can I control right now?"`,
+      }),
+      "2": speak({
+        hinglish: `${profile.name}, conversation script ready: "Main aapse ladna nahi chahta/chahti. Mujhe support chahiye, pressure nahi. Chaliye ek workable plan banate hain." Is line ko calm tone me use karo.`,
+        hindi: `${profile.name}, बातचीत स्क्रिप्ट तैयार: "मैं आपसे लड़ना नहीं चाहता/चाहती। मुझे सहयोग चाहिए, दबाव नहीं। आइए एक व्यावहारिक योजना बनाते हैं।" इसे शांत स्वर में उपयोग करें।`,
+        english: `${profile.name}, conversation script ready: "I don't want conflict. I need support, not pressure. Let's create a workable plan together." Use this in a calm tone.`,
+      }),
+      "3": speak({
+        hinglish: `${profile.name}, action step now: next 20 minutes ke liye ek single task choose karo aur timer lagao. Completion ke baad mujhe update bhejo: "Done 1/1".`,
+        hindi: `${profile.name}, अब एक्शन स्टेप: अगले 20 मिनट के लिए एक ही कार्य चुनें और टाइमर लगाएँ। पूरा होने के बाद लिखें: "Done 1/1"।`,
+        english: `${profile.name}, action step now: pick one single task for the next 20 minutes and set a timer. After completion, update me with: "Done 1/1".`,
+      }),
+    }[choice];
+
+    return {
+      category,
+      wisdom,
+      plan,
+      text: `${optionReply}\n\n${speak({
+        hinglish: "Agar helpful laga toh next me 1,2,3 me se doosra option bhi try kar sakte ho.",
+        hindi: "यदि यह सहायक लगा हो, तो अगली बार 1,2,3 में से दूसरा विकल्प भी आज़मा सकते हैं।",
+        english: "If this helps, you can also try another option (1,2,3) next.",
+      })}`,
     };
   }
 
@@ -765,8 +797,10 @@ function BreathingCoach({ profile }) {
   const [phaseLeft, setPhaseLeft] = useState(0);
   const [cycleCount, setCycleCount] = useState(0);
   const [cueOn, setCueOn] = useState(true);
+  const [omVoiceOn, setOmVoiceOn] = useState(true);
   const language = profile?.language || "hinglish";
   const speak = (variants) => variants[language] || variants.hinglish;
+  const omVoiceRef = useRef(null);
 
   const protocol = useMemo(() => {
     const breathPaces = {
@@ -848,6 +882,31 @@ function BreathingCoach({ profile }) {
     }
   };
 
+  const playOmChantVoice = () => {
+    if (!omVoiceOn || mode !== "om" || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    try {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const utter = new SpeechSynthesisUtterance(language === "hindi" ? "ओम्" : "Om");
+      utter.rate = 0.45;
+      utter.pitch = 0.8;
+      utter.volume = 0.9;
+      utter.lang = language === "hindi" ? "hi-IN" : "en-IN";
+      const voices = synth.getVoices();
+      const preferred =
+        voices.find((v) => /hi-IN|en-IN/i.test(v.lang) && /india|hindi|female|male/i.test(v.name)) ||
+        voices.find((v) => /hi-IN|en-IN/i.test(v.lang)) ||
+        voices[0];
+      if (preferred) {
+        utter.voice = preferred;
+      }
+      omVoiceRef.current = utter;
+      synth.speak(utter);
+    } catch {
+      // Ignore speech synthesis errors on unsupported browsers.
+    }
+  };
+
   useEffect(() => {
     setRunning(false);
     setPaused(false);
@@ -855,6 +914,22 @@ function BreathingCoach({ profile }) {
     setPhaseLeft(protocol.phases[0].seconds);
     setCycleCount(0);
   }, [protocol]);
+
+  useEffect(() => {
+    if (!running || paused) return;
+    const phase = protocol.phases[phaseIndex];
+    if (mode === "om" && phase?.label === "Chant OM") {
+      playOmChantVoice();
+    }
+  }, [running, paused, phaseIndex, mode, protocol, omVoiceOn, language]);
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!running || paused) return;
@@ -899,7 +974,9 @@ function BreathingCoach({ profile }) {
     phaseIndex +
     (currentPhase.seconds - phaseLeft) / Math.max(currentPhase.seconds, 1);
   const totalUnits = Math.max(targetCycles * protocol.phases.length, 1);
-  const progress = Math.min(100, Math.round((completedUnits / totalUnits) * 100));
+  const progress = !running && cycleCount === 0 && phaseIndex === 0
+    ? 0
+    : Math.min(100, Math.round((completedUnits / totalUnits) * 100));
   const statusText = running ? (paused ? "Paused" : "In progress") : cycleCount >= targetCycles ? "Completed" : "Ready";
 
   const startSession = () => {
@@ -917,6 +994,9 @@ function BreathingCoach({ profile }) {
     setCycleCount(0);
     setPhaseIndex(0);
     setPhaseLeft(protocol.phases[0].seconds);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
   };
 
   return (
@@ -999,6 +1079,10 @@ function BreathingCoach({ profile }) {
 
         <button type="button" className="secondary-btn mini" onClick={() => setCueOn((prev) => !prev)}>
           <Bell size={14} /> Cue {cueOn ? "On" : "Off"}
+        </button>
+
+        <button type="button" className="secondary-btn mini" onClick={() => setOmVoiceOn((prev) => !prev)}>
+          <Sparkles size={14} /> OM Voice {omVoiceOn ? "On" : "Off"}
         </button>
       </div>
 
@@ -1389,7 +1473,7 @@ export default function App() {
         .breath-orb small { font-size: 0.68rem; color: ${UI.muted}; }
         .breath-meta { display: flex; justify-content: center; margin-bottom: 8px; gap: 10px; flex-wrap: wrap; }
         .breath-meta span { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; color: ${UI.muted}; }
-        .wizard-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+        .wizard-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
         .secondary-btn.mini { margin-top: 0; font-size: 0.76rem; padding: 10px 8px; border-radius: 10px; min-height: 42px; }
         .scripture-tip { margin-top: 10px; border: 1px solid rgba(167,139,250,0.35); background: rgba(76,29,149,0.25); border-radius: 10px; padding: 8px 10px; color: ${UI.muted}; font-size: 0.74rem; line-height: 1.4; text-align: left; }
 
