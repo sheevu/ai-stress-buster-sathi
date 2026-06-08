@@ -88,6 +88,13 @@ const SUPPORT_MODES = [
     accent: "linear-gradient(135deg,#a78bfa,#ec4899)",
   },
   {
+    id: "ayurveda",
+    title: "Ayurveda + Yoga",
+    subtitle: "Healing through natural balance",
+    icon: Wind,
+    accent: "linear-gradient(135deg,#10b981,#059669)",
+  },
+  {
     id: "action",
     title: "Practical Plan",
     subtitle: "Personalized next 24-hour plan",
@@ -320,15 +327,252 @@ const CASE_EXAMPLES = {
   },
 };
 
+
+const AYURVEDIC_YOGA_RECOMMENDATIONS = {
+  academic: {
+    dosha: "Vata imbalance (scattered focus, anxiety)",
+    yoga: ["Child's Pose (Balasana) - 5 min for grounding", "Seated Forward Bend (Paschimottanasana) - 3 min", "Legs Up the Wall (Viparita Karani) - 5 min before study"],
+    pranayama: ["Nadi Shodhana (Alternate Nostril) - 5 min to balance hemispheres", "Bhramari (Bee Breath) - 2 min to calm racing thoughts"],
+    diet: "Warm, oily foods. Sesame oil massage on scalp. Avoid cold drinks.",
+    routine: "Study during Brahma Muhurta (4-6 AM). Oil massage before bed.",
+  },
+  career: {
+    dosha: "Pitta imbalance (frustration, burnout)",
+    yoga: ["Warrior I & II (Virabhadrasana) - build steady confidence", "Cobra Pose (Bhujangasana) - 2 min to open chest", "Cat-Cow (Marjaryasana-Bitilasana) - 3 min for flexibility"],
+    pranayama: ["Sitali Pranayama (Cooling Breath) - 3 min to reduce heat", "Ujjayi Breath (Ocean Breath) - 5 min for focus"],
+    diet: "Cooling foods: coconut, cucumber, ghee, milk. Avoid spicy food.",
+    routine: "Evening yoga 6-7 PM. Abhyanga (oil massage) with cooling oils.",
+  },
+  family: {
+    dosha: "Vata + Pitta imbalance (emotional volatility)",
+    yoga: ["Supported Fish Pose - opens heart for compassion", "Reclined Butterfly (Supta Baddha Konasana) - 5 min", "Mountain Pose (Tadasana) - grounding before conversations"],
+    pranayama: ["Samavṛtti Pranayama (Box Breathing) - 4-4-4-4 for stability", "Anuloma Viloma with longer exhales - calms nervous system"],
+    diet: "Warm, grounding foods. Ghee, sesame oil, warm spices.",
+    routine: "Practice yoga 7-8 AM or 6-7 PM. Daily oil massage.",
+  },
+  relationship: {
+    dosha: "Kapha imbalance (lethargy, attachment)",
+    yoga: ["Sun Salutation (Surya Namaskar) - 5 rounds to energize", "Warrior III (Virabhadrasana III) - balance pose", "Backbends (Urdhva Mukha Svanasana) - 2 min to open heart"],
+    pranayama: ["Kapalabhati (Skull Shining Breath) - 2 min to energize", "Bhastrika (Bellows Breath) - 3 min for activation"],
+    diet: "Light, warming foods. Reduce heavy dairy. Ginger, turmeric, honey.",
+    routine: "Morning yoga 5-6 AM. Walking after meals.",
+  },
+  anxiety: {
+    dosha: "Vata aggravation (nervousness, racing mind)",
+    yoga: ["Child's Pose - 10 min for deep rest", "Supported Shoulder Stand (Salamba Sarvangasana) - 3-5 min", "Corpse Pose (Shavasana) - 15 min minimum"],
+    pranayama: ["Extended Exhale (4-4-8 ratio) - calms nervous system", "Bhramari Bee Breath - 5 min daily"],
+    diet: "Sesame oil massage. Warm milk with ashwagandha. Avoid stimulants.",
+    routine: "Bedtime yoga 9-10 PM. Abhyanga before sleep.",
+  },
+  sadness: {
+    dosha: "Kapha excess (heaviness, low motivation)",
+    yoga: ["Sun Salutation - 10 rounds energizing flow", "Standing poses (Warrior, Triangle) - activate solar plexus", "Chest openers - Camel Pose (Ustrasana)"],
+    pranayama: ["Breath of Joy (Hari Om) - energizing chant + breath", "Kapalabhati - 2-3 rounds for activation"],
+    diet: "Warm, stimulating foods. Ginger tea, turmeric milk, light meals.",
+    routine: "Morning sunlight + yoga 6-7 AM. Avoid sleeping excessively.",
+  },
+  finance: {
+    dosha: "Vata + anxiety (worried, scattered decisions)",
+    yoga: ["Grounding poses: Mountain, Warrior I, Tree Pose", "Hip openers (Pigeon Pose) - releases stored anxiety", "Forward Folds - calming poses"],
+    pranayama: ["Nadi Shodhana (10 min) - clarity for decisions", "Extended Exhale breathing - stability"],
+    diet: "Warm, nourishing foods. Root vegetables, ghee, whole grains.",
+    routine: "Yoga 30 min before financial planning. Evening oil massage.",
+  },
+  general: {
+    dosha: "Mixed imbalance (general stress)",
+    yoga: ["Gentle Hatha flow - 20 min", "Balance poses for focus", "Restorative yoga - 15 min minimum"],
+    pranayama: ["Box Breathing (4-4-4-4) - 5 min anytime", "Alternate Nostril Breathing - 5-10 min"],
+    diet: "Balanced meals. Seasonal foods. Warm, cooked meals.",
+    routine: "Daily yoga 20-30 min. Consistent sleep schedule.",
+  },
+};
+
+const YOGA_ASANAS = {
+  quick_energy: [
+    { name: "Sun Salutation", duration: "5 min", reps: "5-10", benefit: "Energy, focus, spine health" },
+    { name: "Mountain Pose", duration: "1 min", reps: "3 holds", benefit: "Grounding, posture, confidence" },
+    { name: "Warrior I", duration: "1 min each side", reps: "3 holds", benefit: "Strength, stability, courage" },
+    { name: "Tree Pose", duration: "1 min each side", reps: "3 holds", benefit: "Balance, focus, grounding" },
+  ],
+  calming: [
+    { name: "Child's Pose", duration: "5-10 min", reps: "1 hold", benefit: "Anxiety relief, calming" },
+    { name: "Cat-Cow", duration: "3 min", reps: "10-15 rounds", benefit: "Spinal flexibility, nervous system calm" },
+    { name: "Supported Fish Pose", duration: "5 min", reps: "1 hold", benefit: "Chest opening, anxiety relief" },
+    { name: "Legs Up the Wall", duration: "10 min", reps: "1 hold", benefit: "Deep rest, nervous system reset" },
+  ],
+  energizing: [
+    { name: "Downward Dog", duration: "2 min", reps: "3 holds", benefit: "Energy, circulation, strength" },
+    { name: "Plank Pose", duration: "1 min", reps: "3 holds", benefit: "Core strength, confidence" },
+    { name: "Cobra/Upward Dog", duration: "1 min each", reps: "5 rounds", benefit: "Heart opening, energy boost" },
+    { name: "Camel Pose", duration: "1-2 min", reps: "3 rounds", benefit: "Chest opening, mood elevation" },
+  ],
+};
+
+const PRANAYAMA_TECHNIQUES = {
+  nadi_shodhana: {
+    name: "Nadi Shodhana (Alternate Nostril Breathing)",
+    duration: "5-10 min",
+    benefits: "Mental clarity, balance, anxiety relief",
+    steps: [
+      "Sit upright. Use Vishnu Mudra (thumb and two fingers to close nostrils).",
+      "Close right nostril, inhale left for 4 counts.",
+      "Close left nostril, exhale right for 4 counts.",
+      "Inhale right for 4 counts, exhale left for 4 counts.",
+      "Continue for 10 cycles.",
+    ],
+    best_for: ["Academic stress", "Decision-making", "Mental clarity"],
+  },
+  box_breathing: {
+    name: "Box Breathing (Sama Vritti)",
+    duration: "5 min",
+    benefits: "Stress relief, emotional regulation, focus",
+    steps: [
+      "Sit comfortably. Inhale for 4 counts.",
+      "Hold for 4 counts.",
+      "Exhale for 4 counts.",
+      "Hold for 4 counts.",
+      "Repeat 10-15 cycles.",
+    ],
+    best_for: ["Anxiety", "Panic attacks", "Emotional overwhelm"],
+  },
+  extended_exhale: {
+    name: "Extended Exhale Breathing",
+    duration: "3-5 min",
+    benefits: "Nervous system calming, anxiety reduction",
+    steps: [
+      "Sit comfortably. Inhale for 4 counts.",
+      "Exhale for 8 counts (twice as long as inhale).",
+      "Repeat for 10-20 cycles.",
+      "Focus on the longer exhale.",
+    ],
+    best_for: ["Anxiety", "Sleep issues", "Emotional intensity"],
+  },
+  bhramari: {
+    name: "Bhramari (Bee Breath)",
+    duration: "2-3 min",
+    benefits: "Mental clarity, throat chakra healing, anxiety relief",
+    steps: [
+      "Sit upright. Close ears with thumbs (Shanmukhi Mudra).",
+      "Inhale deeply through nose.",
+      "Exhale while making 'mmmmm' humming sound.",
+      "Feel vibration in head and throat.",
+      "Repeat 10-15 cycles.",
+    ],
+    best_for: ["Racing thoughts", "Anxiety", "Sleep issues"],
+  },
+  kapalabhati: {
+    name: "Kapalabhati (Skull Shining Breath)",
+    duration: "2-3 min",
+    benefits: "Energy boost, mental clarity, toxin release",
+    steps: [
+      "Sit upright. Inhale through both nostrils.",
+      "Forcefully exhale through nose (quick bursts).",
+      "Let inhale happen passively.",
+      "Do 20-30 rapid exhales in one round.",
+      "Rest and repeat 2-3 rounds.",
+    ],
+    best_for: ["Low energy", "Depression", "Mental fog"],
+  },
+  sitali: {
+    name: "Sitali Pranayama (Cooling Breath)",
+    duration: "3-5 min",
+    benefits: "Cooling, anger management, stress relief",
+    steps: [
+      "Sit upright. Curl tongue into a tube shape.",
+      "Inhale slowly through curled tongue.",
+      "Close mouth, exhale through nose.",
+      "Repeat 10-15 cycles.",
+      "(If can't curl tongue, inhale through teeth instead.)",
+    ],
+    best_for: ["Anger", "Frustration", "Overheating"],
+  },
+};
+
+const DOSHA_RECOMMENDATIONS = {
+  vata: {
+    description: "Air element - Mobile, creative, anxious, scattered",
+    imbalance_signs: "Anxiety, insomnia, scattered focus, indecision, dry skin",
+    daily_routine: [
+      "Wake 6 AM, early bed (10 PM)",
+      "Warm breakfast. Avoid skipping meals.",
+      "Oil massage (abhyanga) 3x week",
+      "Warm, oily foods with healthy fats",
+      "Afternoon meditation/grounding",
+    ],
+    yoga: "Grounding poses: Mountain, Warrior, Child's Pose",
+    food: "Sesame oil, ghee, warm milk, root vegetables, warm spices",
+    avoid: "Cold drinks, dry foods, irregular meals, excessive activity",
+  },
+  pitta: {
+    description: "Fire element - Ambitious, sharp, irritable, competitive",
+    imbalance_signs: "Anger, burnout, inflammation, criticism, frustration",
+    daily_routine: [
+      "Wake 6 AM, sleep 10:30 PM",
+      "Avoid skipping lunch (main meal)",
+      "Cooling practices and meditation",
+      "Evening yoga for activation",
+      "Adequate rest - don't overwork",
+    ],
+    yoga: "Cooling poses: Child's Pose, Supported Fish, Forward Folds",
+    food: "Coconut oil, ghee, cooling spices, fresh vegetables, milk",
+    avoid: "Spicy food, excessive exercise, hot environments, excess coffee",
+  },
+  kapha: {
+    description: "Water/Earth element - Stable, heavy, sluggish, attached",
+    imbalance_signs: "Low motivation, heaviness, lethargy, attachment, excess weight",
+    daily_routine: [
+      "Wake 5-6 AM (early)",
+      "Light breakfast or skip",
+      "Daily exercise/movement",
+      "Stimulating practices",
+      "Variety in routine",
+    ],
+    yoga: "Energizing: Sun Salutation, Standing poses, Backbends",
+    food: "Mustard oil, light spices, ginger, turmeric, bitter greens",
+    avoid: "Heavy foods, dairy excess, sleeping too much, sedentary lifestyle",
+  },
+};
+
+const AYURVEDIC_LIFESTYLE_TIPS = {
+  morning_routine: [
+    "Wake before sunrise (Brahma Muhurta) for clarity",
+    "Tongue scraping (copper) - removes toxins",
+    "Oil pulling (10 min) - oral health + detox",
+    "Warm water with lemon or honey - digestive fire",
+    "Yoga/stretch - 15-20 min for flexibility",
+    "Meditation - 5-10 min for mental clarity",
+    "Healthy breakfast within 1 hour of waking",
+  ],
+  evening_routine: [
+    "Sunset walk - balance circadian rhythm",
+    "Abhyanga (oil massage) 2-3x per week",
+    "Warm bath or shower",
+    "Light dinner 2-3 hours before bed",
+    "Gentle yoga or stretch - 10-15 min",
+    "Sleep by 10 PM for best rest",
+    "Avoid screens 1 hour before bed",
+  ],
+  seasonal_adjustments: [
+    "Spring (Kapha season): More exercise, warm spices, reduce dairy",
+    "Summer (Pitta season): Cooling foods, evening yoga, rest midday",
+    "Fall/Winter (Vata season): Warm foods, oil massage, grounding practices",
+  ],
+  seasonal_foods: {
+    spring: "Bitter greens, asparagus, light grains, warming spices",
+    summer: "Coconut, cucumber, fresh fruits, cooling herbs",
+    fall_winter: "Root vegetables, whole grains, sesame, ghee, nuts",
+  },
+};
+
 const PRACTICAL_STEPS = {
-  academic: ["Make a 90-minute focused study block for one subject.", "Use Pomodoro 25-5 for the next two sessions.", "Send one doubt/question to teacher or friend today."],
-  career: ["Write top 3 skills you can monetize right now.", "Apply to at least 2 roles with custom CV bullets.", "Schedule a 20-min learning sprint for one growth skill."],
-  family: ["Use one calm boundary sentence: 'Mujhe 20 min chahiye, fir baat karte hain.'", "Discuss one issue at a time, not past incidents.", "Ask one supportive family member to mediate."],
-  relationship: ["Do a 24-hour social media detox from trigger profiles.", "Journal: what hurt, what you need, what you learned.", "Plan one grounding activity outside home today."],
-  anxiety: ["Try 4-4-6 breathing for 3 cycles.", "Do 5-4-3-2-1 grounding with your senses.", "Cut caffeine after 4 PM for the next 3 days."],
-  sadness: ["Take a 15-minute sunlight walk.", "Message one trusted person: 'Can we talk for 10 mins?'", "Write one page: 'What do I need right now?'"],
-  finance: ["List fixed and variable expenses separately.", "Pick one cost to reduce this week by 10-15%.", "Identify one side-skill learning source (free)."],
-  general: ["Drink water and take 10 slow breaths.", "Write your top worry and one controllable action.", "Choose one tiny task and finish it in 20 minutes."],
+  academic: ["Make a 90-minute focused study block for one subject.", "Use Pomodoro 25-5 for the next two sessions.", "Send one doubt/question to teacher or friend today.", "Sit in Child's Pose 5 min before studying to focus.", "Practice Nadi Shodhana 5 min to balance left-right brain."],
+  career: ["Write top 3 skills you can monetize right now.", "Apply to at least 2 roles with custom CV bullets.", "Schedule a 20-min learning sprint for one growth skill.", "Do 5 rounds of Sun Salutation for energy.", "Practice cooling breath (Sitali) before meetings."],
+  family: ["Use one calm boundary sentence: 'Mujhe 20 min chahiye, fir baat karte hain.'", "Discuss one issue at a time, not past incidents.", "Ask one supportive family member to mediate.", "Do 10 min of grounding yoga before conversations.", "Practice Box Breathing before difficult talks."],
+  relationship: ["Do a 24-hour social media detox from trigger profiles.", "Journal: what hurt, what you need, what you learned.", "Plan one grounding activity outside home today.", "10 min of calming Child's Pose and forward folds.", "Take an oil massage (abhyanga) for self-care."],
+  anxiety: ["Try 4-4-6 breathing for 3 cycles.", "Do 5-4-3-2-1 grounding with your senses.", "Cut caffeine after 4 PM for the next 3 days.", "Practice Bhramari (Bee Breath) for 5 cycles.", "Do 15 min of Legs Up the Wall (Viparita Karani)."],
+  sadness: ["Take a 15-minute sunlight walk.", "Message one trusted person: 'Can we talk for 10 mins?'", "Write one page: 'What do I need right now?'", "Do 10 rounds of Sun Salutation to energize.", "Drink turmeric milk (golden milk) at bedtime."],
+  finance: ["List fixed and variable expenses separately.", "Pick one cost to reduce this week by 10-15%.", "Identify one side-skill learning source (free).", "Practice grounding poses (Mountain, Tree) 10 min.", "Do Nadi Shodhana for clarity on financial decisions."],
+  general: ["Drink water and take 10 slow breaths.", "Write your top worry and one controllable action.", "Choose one tiny task and finish it in 20 minutes.", "Sit in Lotus or cross-legged for 5 min meditation.", "Oil massage on hands and feet for 10 min."],
 };
 
 const ROLE_BOOST = {
@@ -359,6 +603,13 @@ const QUICK_PROMPTS = {
     "Ek chhota grounding ritual suggest karo.",
     "Aaj ke liye koi wisdom-based reflection do.",
     "Breathing + mantra style reset chahiye.",
+  ],
+  ayurveda: [
+    "Mujhe yoga poses suggest karo anxiety ke liye.",
+    "Kaunsi dosha imbalance ho sakti hai mujhmein?",
+    "Best pranayama technique batao isse stress ke liye.",
+    "Mere liye Ayurvedic daily routine suggest karo.",
+    "Asana sequence banao 20 min mein.",
   ],
   action: [
     "Mere liye 24-hour action plan banao.",
@@ -537,6 +788,11 @@ function makeAssistantReply({ profile, message, mode, moodScore, emotion, histor
       hindi: `${profile.name}, पहले शरीर को शांत करते हैं, फिर मन स्पष्ट होगा।`,
       english: `${profile.name}, first we calm the body, then the mind becomes clearer.`,
     }),
+    ayurveda: speak({
+      hinglish: `${profile.name}, Ayurveda aur Yoga se aapka natural balance restore hoga. Let's find your healing rhythm.`,
+      hindi: `${profile.name}, आयुर्वेद और योग से आपका प्राकृतिक संतुलन फिर से स्थापित होगा।`,
+      english: `${profile.name}, through Ayurveda and Yoga, we'll restore your natural balance and healing rhythm.`,
+    }),
     action: speak({
       hinglish: `${profile.name}, ab hum stress ko action mein convert karte hain.`,
       hindi: `${profile.name}, अब हम तनाव को कार्ययोजना में बदलते हैं।`,
@@ -564,6 +820,11 @@ function makeAssistantReply({ profile, message, mode, moodScore, emotion, histor
       hinglish: "Try 3 rounds: inhale 4, hold 4, exhale 6. Exhale ke saath silently bolo: 'Main surakshit hoon, main sthir hoon.'",
       hindi: "3 राउंड करें: 4 गिनती में श्वास लें, 4 तक रोकें, 6 में छोड़ें। छोड़ते समय मन में कहें: 'मैं सुरक्षित हूँ, मैं स्थिर हूँ।'",
       english: "Try 3 rounds: inhale 4, hold 4, exhale 6. During exhale, repeat silently: 'I am safe, I am steady.'",
+    }),
+    ayurveda: speak({
+      hinglish: `Try this: Find your dominant dosha (Vata-airy, Pitta-fiery, Kapha-heavy). Practice the specific yoga pose and pranayama for your type. For ${category} stress, grounding poses + Nadi Shodhana work best. Start 10 min daily for 7 days.`,
+      hindi: `अपनी प्रमुख दोष को पहचानें (वात-हल्का, पित्त-तीव्र, कफ-भारी)। अपने प्रकार के लिए विशेष योग मुद्रा और प्राणायाम का अभ्यास करें।`,
+      english: `Identify your dominant dosha (Vata-airy, Pitta-fiery, Kapha-heavy). Practice the specific yoga poses and pranayama for your type. For ${category} stress, grounding poses + Nadi Shodhana work best. Start 10 min daily for 7 days.`,
     }),
     action: speak({
       hinglish: "Agle 24 ghante ke liye sirf 3 outcomes pick karo: emotional reset, ek practical task, ek support connection.",
